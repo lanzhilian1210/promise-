@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+const PENDING = "pending";
+const FULFILLED = "fulfilled";
+const REJECTED = "rejected";
+class Promise{
+    constructor(exector){
+        let self = this;
+        self.status = PENDING;
+        self.value = undefined;
+        self.reason = undefined;
+        console.log(self.status);
+        let resolve = (value)=>{
+            if(self.status === PENDING){
+                self.status = FULFILLED
+                self.value = value;
+            }
+        }
+        let reject = (reason)=>{
+            if(self.status === PENDING){
+                self.status = REJECTED;
+                self.reason = reason
+            }
+        }
+        try{
+            exector(resolve,reject)
+        }catch(e){
+            reject(e)
+        }
+    }
+    then(onFulfilled,onRejected){
+        let self = this;
+        if(self.status === FULFILLED){
+            onFulfilled(self.value);
+        }
+        if(self.status === REJECTED){
+            onRejected(self.reason);
+        }
+    }
+};
+
+
+new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+        resolve(2)
+    })
+}).then((data)=>{
+    console.log(data)
+},(reason)=>{
+    console.log(reason)
+})
+    </script>
+</body>
+</html>
